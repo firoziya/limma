@@ -15,7 +15,7 @@
 
 [![GitHub Stars](https://img.shields.io/github/stars/firoziya/limma?style=for-the-badge&logo=github)](https://github.com/firoziya/limma)
 [![GitHub Issues](https://img.shields.io/github/issues/firoziya/limma?style=for-the-badge&logo=github)](https://github.com/firoziya/limma/issues)
-[![Documentation](https://img.shields.io/badge/docs-available-brightgreen?style=for-the-badge&logo=gitbook&logoColor=white)](https://pylimma.vercel.app/docs/)
+[![Documentation](https://img.shields.io/badge/docs-available-brightgreen?style=for-the-badge&logo=gitbook&logoColor=white)](https://limma.live/docs/)
 
 </div>
 
@@ -111,7 +111,7 @@ config = LimmaConfig(
         "kitchen light": "ch03",
         "garage door": "ch04"
     },
-    api_key="your-limma-api-key",   # Get from https://pylimma.vercel.app
+    api_key="your-limma-api-key",   # Get from https://limma.live
     reply=True                      # Enable voice responses
 )
 
@@ -382,7 +382,7 @@ limma.execute_command("emergency stop all systems")
 | Issue | Solution |
 |-------|----------|
 | 🔴 ESP not found | Check IP address, WiFi connection |
-| 🔴 API key error | Verify key at https://pylimma.vercel.app |
+| 🔴 API key error | Verify key at https://limma.live |
 | 🔴 Command not working | Check device mapping, try simpler commands |
 | 🔴 Network issues | Use `auto_discover_esp()` function |
 
@@ -408,7 +408,7 @@ This project is licensed under the **Apache License 2.0** - see the [LICENSE](LI
 **Yash Kumar Firoziya**
 - 📧 Email: [ykfiroziya@gmail.com](mailto:ykfiroziya@gmail.com)
 - 🐱 GitHub: [@firoziya](https://github.com/firoziya)
-- 🌐 Website: [pylimma.vercel.app](https://pylimma.vercel.app)
+- 🌐 Website: [limma.live](https://limma.live)
 
 ---
 
@@ -437,7 +437,8 @@ If you found LIMMA helpful, please consider:
 *Bringing the future of IoT control to everyone*
 
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/firoziya/limma)
-[![Documentation](https://img.shields.io/badge/Docs-4285F4?style=for-the-badge&logo=gitbook&logoColor=white)](https://pylimma.vercel.app/docs/)
+[![Documentation](https://img.shields.io/badge/Docs-4285F4?style=for-the-badge&logo=gitbook&logoColor=white)](https://limma.live/docs/)
 [![PyPI](https://img.shields.io/badge/PyPI-3775A9?style=for-the-badge&logo=pypi&logoColor=white)](https://pypi.org/project/limma/)
 
 </div>
+
