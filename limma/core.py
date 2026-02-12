@@ -57,7 +57,8 @@ class LimmaConfig:
     """Configuration class for LIMMA."""
     
     def __init__(self, esp_ip: str, application_type: str, device_map: dict, 
-                api_key: str, server_url: str = "https://limma-api.onrender.com/parse", 
+                api_key: str, server_url: str = "https://api.limma.live/parse", 
+                # api_key: str, server_url: str = "http://10.179.198.39:5000/parse", 
                 reply: bool = False):
         """
         Initialize LIMMA configuration.
@@ -267,16 +268,18 @@ class Limma:
             logger.error(f"Unexpected error processing server response: {e}")
             return []
     
+    
     def send_to_esp(self, functions: List[str]) -> Tuple[bool, Optional[str]]:
-        """Send function calls to ESP device"""
+        """Send function calls to ESP device and return response if available."""
         success = True
         reply_text = None
-        
+        collected_responses = []  # To store any text data received from ESP
+
         for fn in functions:
             try:
+                # Handle wait()
                 if fn.startswith("wait(") and fn.endswith(")"):
-                    # Handle wait command
-                    seconds_str = fn[5:-1]  # Extract number from wait(N)
+                    seconds_str = fn[5:-1]
                     try:
                         seconds = int(seconds_str)
                         logger.debug(f"Waiting for {seconds} seconds")
@@ -285,31 +288,58 @@ class Limma:
                         logger.error(f"Invalid wait time: {seconds_str}")
                         success = False
                     continue
-                
+
+                # Handle reply:
                 elif fn.startswith("reply:"):
-                    # Handle reply command
                     reply_text = fn.replace("reply:", "").strip()
                     logger.debug(f"Reply text: {reply_text}")
                     continue
-                
+
+                # Handle servo motor commands like s1_90 or s2_180
+                elif fn.startswith("s") and "_" in fn:
+                    url = f"http://{self.config.esp_ip}/{fn}"
+                    logger.debug(f"Rotating servo using URL: {url}")
+                    response = self.session.get(url, timeout=5)
+                    if response.status_code == 200:
+                        logger.debug(f"Servo command {fn} executed successfully")
+                        # If ESP also returns a message, capture it
+                        try:
+                            data = response.json()
+                            if "data" in data:
+                                collected_responses.append(str(data["data"]))
+                        except Exception:
+                            if response.text.strip():
+                                collected_responses.append(response.text.strip())
+                    else:
+                        logger.error(f"Servo command {fn} failed: HTTP {response.status_code}")
+                        success = False
+
+                # Handle standard ESP function calls like getTemp(), getHum(), ch01on(), etc.
                 elif fn.endswith("()"):
-                    # Handle ESP function call
                     fn_clean = fn.replace("()", "")
                     url = f"http://{self.config.esp_ip}/{fn_clean}"
-                    
                     logger.debug(f"Calling ESP function: {url}")
                     response = self.session.get(url, timeout=5)
-                    
                     if response.status_code == 200:
-                        logger.debug(f"ESP function {fn_clean} executed successfully")
+                        # ✅ Try to extract message or data from response
+                        try:
+                            data = response.json()
+                            if "data" in data:
+                                collected_responses.append(str(data["data"]))
+                            elif "message" in data:
+                                collected_responses.append(str(data["message"]))
+                        except Exception:
+                            # If response isn't JSON, take plain text
+                            if response.text.strip():
+                                collected_responses.append(response.text.strip())
                     else:
                         logger.error(f"ESP function {fn_clean} failed: HTTP {response.status_code}")
                         success = False
-                
+
                 else:
                     logger.warning(f"Unknown function format: {fn}")
                     success = False
-                    
+
             except requests.exceptions.Timeout:
                 logger.error(f"ESP function {fn} timed out")
                 success = False
@@ -319,9 +349,14 @@ class Limma:
             except Exception as e:
                 logger.error(f"Unexpected error calling ESP function {fn}: {e}")
                 success = False
-        
+
+        # Combine all responses if multiple
+        if collected_responses:
+            reply_text = " | ".join(collected_responses)
+
         return success, reply_text
-    
+
+
     def execute_command(self, command: str) -> Tuple[bool, Optional[str]]:
         """Execute a complete command (server + ESP)"""
         logger.info(f"Executing command: {command}")

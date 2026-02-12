@@ -1,1 +1,11 @@
-requests>=2.25.0
+# Core
+requests>=2.20.0
+
+# Voice
+SpeechRecognition==3.10.4
+pyttsx3==2.98
+PyAudio==0.2.14
+
+# SpeechRecognition>=3.8.1
+# pyttsx3>=2.90
+# PyAudio>=0.2.11
