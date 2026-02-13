@@ -57,7 +57,7 @@ class LimmaConfig:
     """Configuration class for LIMMA."""
     
     def __init__(self, esp_ip: str, application_type: str, device_map: dict, 
-                api_key: str, server_url: str = "https://api.limma.live/parse", 
+                api_key: str, server_url: str = "https://limma-api.vercel.app/parse", 
                 # api_key: str, server_url: str = "http://10.179.198.39:5000/parse", 
                 reply: bool = False):
         """

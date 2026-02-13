@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="limma",
-    version="0.2.0",
+    version="0.2.1",
     author="Yash Kumar Firoziya",
     author_email="ykfiroziya@gmail.com",
     description="Language Interface Model for Machine Automation - Control ESP devices with natural language",
@@ -30,7 +30,6 @@ setup(
         "requests>=2.25.0",
         "SpeechRecognition>=3.8.1",
         "pyttsx3>=2.90",
-        "PyAudio>=0.2.11",
     ],
     package_data={
         'speech_recognition': ['*.wav'],
@@ -39,8 +38,9 @@ setup(
         "dev": [
             "pytest>=6.0",
             "black>=21.0",
-            "flake8>=3.9",
+            "flake8>=3.9",   
         ],
+        "mic": ["pyaudio"],
     },
     keywords="esp8266 esp32 iot microcontroller natural-language automation home-automation limma",
     project_urls={
